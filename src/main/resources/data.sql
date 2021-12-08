@@ -1,0 +1,1 @@
+INSERT INTO USER (NAME, EMAIL, PASSWORD) VALUES ('admin', 'admin@musinsa.com', '$2a$10$Jnq1GIZc7fZpQ2G70/VqK.q8BWVSi0K/Hl3BLvBPyyolcqdUB483.');

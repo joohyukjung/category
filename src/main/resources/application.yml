@@ -1,5 +1,8 @@
-spring:
+logging:
+  level:
+    com.musinsa.category: DEBUG
 
+spring:
   h2:
     console:
       enabled: true
@@ -10,3 +13,19 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+#    initialization-mode: never
+
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+    defer-datasource-initialization: true
+
+jwt:
+  # life-style-select-shop-www-musinsa-com
+  secret-key: bGlmZS1zdHlsZS1zZWxlY3Qtc2hvcC13d3ctbXVzaW5zYS1jb20K
+  token-validity-in-seconds: 10800
