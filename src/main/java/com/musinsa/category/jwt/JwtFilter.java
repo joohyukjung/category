@@ -38,7 +38,7 @@ public class JwtFilter extends GenericFilterBean {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             logger.debug("Stored '{}' authentication information in Security Context, uri: {}", authentication.getName(), requestURI);
         } else {
-            logger.debug("No valid JWT token, uri: {}", requestURI);
+            logger.debug("Invalid JWT token, uri: {}", requestURI);
         }
 
         filterChain.doFilter(servletRequest, servletResponse);

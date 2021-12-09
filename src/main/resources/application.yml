@@ -29,3 +29,4 @@ jwt:
   # life-style-select-shop-www-musinsa-com
   secret-key: bGlmZS1zdHlsZS1zZWxlY3Qtc2hvcC13d3ctbXVzaW5zYS1jb20K
   token-validity-in-seconds: 10800
+#  token-validity-in-seconds: 30
