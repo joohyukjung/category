@@ -14,4 +14,9 @@ public class AuthDto {
 
     @NotBlank
     private String password;
+
+    public AuthDto(String email, String password) {
+        this.email = email;
+        this.password = password;
+    }
 }

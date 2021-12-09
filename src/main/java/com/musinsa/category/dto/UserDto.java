@@ -1,6 +1,5 @@
 package com.musinsa.category.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.musinsa.category.entity.User;
 import lombok.Builder;
@@ -22,6 +21,12 @@ public class UserDto {
 
     @NotBlank
     private String password;
+
+    public UserDto(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
+    }
 
     public static UserDto from(User user) {
         if(user == null) return null;
