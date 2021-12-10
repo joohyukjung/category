@@ -46,6 +46,11 @@ public class CategoryService {
         return getCategories(0L);
     }
 
+    /**
+     * 재귀 - 계층구조 생성
+     * @param categories
+     * @return
+     */
     private List makeHierarchy(List categories) {
         List array = new ArrayList();
         for (int i = 0; i < categories.size(); i++) {
@@ -91,6 +96,10 @@ public class CategoryService {
         return CategoryDto.from(categoryRepository.save(cate));
     }
 
+    /**
+     * 자신을 포함한 하위 자식 categories까지 삭제
+     * @param id
+     */
     public void deleteCategory(Long id) {
         if (categoryRepository.findById(id).orElse(null) == null) {
             throw new DuplicateException("Category id["+id+"] not found.");
@@ -102,6 +111,10 @@ public class CategoryService {
         deleteChildNodes(childNodes);
     }
 
+    /**
+     * 재귀 - 하위 categories를 순회하며 자식노드까지 모두 삭제한다.
+     * @param childNodes
+     */
     @Transactional(rollbackFor = Exception.class)
     public void deleteChildNodes(List<Category> childNodes) {
         for (int i = 0; i < childNodes.size() ; i++) {
