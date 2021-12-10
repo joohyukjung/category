@@ -23,7 +23,7 @@ public class CategoryController {
     }
 
     @GetMapping("/categories/{id}")
-    public ResponseEntity<CategoryDto> getCategories(
+    public ResponseEntity<CategoryDto> getCategory(
             @PathVariable Long id) {
         return ResponseEntity.ok(categoryService.getCategory(id));
     }
@@ -46,5 +46,10 @@ public class CategoryController {
             @PathVariable Long id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/categories-not-hierarchy")
+    public ResponseEntity<List<CategoryDto>> getCategoriesNotHierarchy() {
+        return ResponseEntity.ok(categoryService.getAllCategoriesNotHierarchy());
     }
 }

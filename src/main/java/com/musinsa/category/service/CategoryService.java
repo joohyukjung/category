@@ -5,9 +5,11 @@ import com.musinsa.category.entity.Category;
 import com.musinsa.category.exception.DuplicateException;
 import com.musinsa.category.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +23,12 @@ public class CategoryService {
     }
 
     public CategoryDto getCategory(Long id) {
-        CategoryDto categoryDto = CategoryDto.from(categoryRepository.findById(id).orElse(null));
+        Category category = categoryRepository.findById(id).orElse(null);
+        if (category == null) {
+            throw new DuplicateException("Category id["+id+"] not found.");
+        }
+
+        CategoryDto categoryDto = CategoryDto.from(category);
         categoryDto.setChildNodes(getCategories(id));
         return categoryDto;
     }
@@ -63,7 +70,7 @@ public class CategoryService {
         return CategoryDto.from(categoryRepository.save(category));
     }
 
-    @Transactional(rollbackFor = Exception.class)
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public CategoryDto updateCategory(Long id, CategoryDto categoryDto) {
         Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
@@ -84,12 +91,30 @@ public class CategoryService {
         return CategoryDto.from(categoryRepository.save(cate));
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public void deleteCategory(Long id) {
         if (categoryRepository.findById(id).orElse(null) == null) {
             throw new DuplicateException("Category id["+id+"] not found.");
         }
 
         categoryRepository.deleteById(id);
+
+        List<Category> childNodes = categoryRepository.findByParentId(id);
+        deleteChildNodes(childNodes);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteChildNodes(List<Category> childNodes) {
+        for (int i = 0; i < childNodes.size() ; i++) {
+            categoryRepository.deleteById(childNodes.get(i).getId());
+            List<Category> childNods = categoryRepository.findByParentId(childNodes.get(i).getId());
+            System.out.println(childNods);
+            deleteChildNodes(childNods);
+        }
+    }
+
+    public List<CategoryDto> getAllCategoriesNotHierarchy() {
+        return categoryRepository.findAll().stream()
+                .map(Category -> CategoryDto.from(Category))
+                .collect(Collectors.toList());
     }
 }

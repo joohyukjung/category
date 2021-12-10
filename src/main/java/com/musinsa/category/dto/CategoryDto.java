@@ -2,7 +2,9 @@ package com.musinsa.category.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.musinsa.category.entity.Category;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
@@ -11,6 +13,7 @@ import java.util.List;
 @Getter
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@AllArgsConstructor
 public class CategoryDto {
     private Long id;
 
