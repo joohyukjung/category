@@ -38,6 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/h2-console/**"
                         ,"/favicon.ico"
                         ,"/error"
+                        ,"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**"
                 );
     }
 
@@ -60,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 
                 .and()
-                .authorizeHttpRequests()
+                .authorizeRequests()
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/auth").permitAll()
                 .anyRequest().authenticated()

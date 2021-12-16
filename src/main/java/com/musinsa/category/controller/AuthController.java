@@ -4,6 +4,7 @@ import com.musinsa.category.dto.AuthDto;
 import com.musinsa.category.dto.TokenDto;
 import com.musinsa.category.jwt.JwtFilter;
 import com.musinsa.category.jwt.TokenProvider;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ public class AuthController {
         this.tokenProvider = tokenProvider;
     }
 
+    @ApiOperation(value = "Token 생성", notes = "JWT Token 발행")
     @PostMapping("/auth")
     public ResponseEntity<?> authorize(@Valid @RequestBody AuthDto authDto) {
         UsernamePasswordAuthenticationToken authenticationToken =

@@ -23,6 +23,9 @@
 
     http://127.0.0.1:8080
 
+### 5. API 문서화 (Swagger)
+    http://127.0.0.1:8080/swagger-ui/index.html
+
 ## data.sql을 이용한 샘플 데이터 자동생성
     // 초기 사용자 생성
     INSERT INTO USER (NAME, EMAIL, PASSWORD) VALUES ('admin', 'admin@musinsa.com', '$2a$10$Jnq1GIZc7fZpQ2G70/VqK.q8BWVSi0K/Hl3BLvBPyyolcqdUB483.');
