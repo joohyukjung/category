@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +49,8 @@ public class CategoryService {
         List<CategoryDto> categories = categoryRepository.findAll().stream()
                 .map(Category -> CategoryDto.from2(Category))
                 .collect(Collectors.toList());
-        List result = makeHierarchy2(categories);
+        // NOTE parentId가 0L이면 최상위 category 로 정의됨
+        List result = makeHierarchy2(0L, categories);
 
         return result;
     }
@@ -80,15 +80,14 @@ public class CategoryService {
      * @param categories
      * @return
      */
-    private List<CategoryDto> makeHierarchy2(List<CategoryDto> categories) {
+    private List<CategoryDto> makeHierarchy2(Long id, List<CategoryDto> categories) {
         List<CategoryDto> results = new ArrayList();
 
         CategoryDto category;
         List<CategoryDto> parentNodes = new ArrayList<>();
         for (int i = 0; i < categories.size(); i++) {
             category = categories.get(i);
-            // NOTE parentId가 0L이면 최상위 category 로 정의됨
-            if (category.getParentId() == 0L) {
+            if (category.getParentId() == id) {
                 parentNodes.add(category);
                 results.add(category);
             } else {
@@ -145,6 +144,8 @@ public class CategoryService {
      * @param id
      */
     public void deleteCategory(Long id) {
+        // TODO Category를 DB에 계층구조 Path를 적용하여 삭제대상을 Like로 조회 후, 하위 Category를 한번에 지우는게 더 좋을 것 같다는 생각.각
+        // TODO 대신 업데이트 할 경우, 자신을 바라보는 Path를 수정하는 것이 까다로울 수 있을 것 같다.
         if (categoryRepository.findById(id).orElse(null) == null) {
             throw new DuplicateException("Category id["+id+"] not found.");
         }
@@ -159,12 +160,10 @@ public class CategoryService {
      * 재귀 - 하위 categories를 순회하며 자식노드까지 모두 삭제한다.
      * @param childNodes
      */
-    @Transactional(rollbackFor = Exception.class)
     public void deleteChildNodes(List<Category> childNodes) {
         for (int i = 0; i < childNodes.size() ; i++) {
             categoryRepository.deleteById(childNodes.get(i).getId());
             List<Category> childNods = categoryRepository.findByParentId(childNodes.get(i).getId());
-            System.out.println(childNods);
             deleteChildNodes(childNods);
         }
     }
