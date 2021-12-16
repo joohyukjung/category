@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -23,9 +24,9 @@ public class CategoryDto {
     @NotNull
     private Long parentId;
 
-    private List childNodes;
+    private List<CategoryDto> childNodes;
 
-    public void setChildNodes(List childNodes) {
+    public void setChildNodes(List<CategoryDto> childNodes) {
         this.childNodes = childNodes;
     }
 
@@ -35,6 +36,17 @@ public class CategoryDto {
         return CategoryDto.builder()
                 .id(category.getId())
                 .value(category.getValue())
+                .build();
+    }
+
+    public static CategoryDto from2(Category category) {
+        if (category == null) return null;
+
+        return CategoryDto.builder()
+                .id(category.getId())
+                .value(category.getValue())
+                .parentId(category.getParentId())
+                .childNodes(new ArrayList())
                 .build();
     }
 }

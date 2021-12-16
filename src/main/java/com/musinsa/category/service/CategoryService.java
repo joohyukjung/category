@@ -46,6 +46,15 @@ public class CategoryService {
         return getCategories(0L);
     }
 
+    public List<CategoryDto> getAllCategoriesV2() {
+        List<CategoryDto> categories = categoryRepository.findAll().stream()
+                .map(Category -> CategoryDto.from2(Category))
+                .collect(Collectors.toList());
+        List result = makeHierarchy2(categories);
+
+        return result;
+    }
+
     /**
      * 재귀 - 계층구조 생성
      * @param categories
@@ -63,6 +72,41 @@ public class CategoryService {
             array.add(categoryDto);
         }
         return array;
+    }
+
+    /**
+     * 계층구조 생성 v2
+     * 전체 categories를 순회하며, childNodes 구분
+     * @param categories
+     * @return
+     */
+    private List<CategoryDto> makeHierarchy2(List<CategoryDto> categories) {
+        List<CategoryDto> results = new ArrayList();
+
+        CategoryDto category;
+        List<CategoryDto> parentNodes = new ArrayList<>();
+        for (int i = 0; i < categories.size(); i++) {
+            category = categories.get(i);
+            // NOTE parentId가 0L이면 최상위 category 로 정의됨
+            if (category.getParentId() == 0L) {
+                parentNodes.add(category);
+                results.add(category);
+            } else {
+                getChildNodes(parentNodes, category);
+                parentNodes.add(category);
+            }
+        }
+        return results;
+    }
+
+    private void getChildNodes(List<CategoryDto> parentNodes, CategoryDto node) {
+        for (int i = parentNodes.size() - 1; i >= 0; i--) {
+            CategoryDto pnode = parentNodes.get(i);
+            if (pnode.getId() == node.getParentId()) {
+                pnode.getChildNodes().add(node);
+                return;
+            }
+        }
     }
 
     @Transactional(rollbackFor = Exception.class)
