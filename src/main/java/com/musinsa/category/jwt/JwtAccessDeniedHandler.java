@@ -9,6 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * 필요한 권한이 존재하지 않은 경우
+ */
 @Component
 public class JwtAccessDeniedHandler implements AccessDeniedHandler {
 

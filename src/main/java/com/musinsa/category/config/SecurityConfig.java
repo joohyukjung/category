@@ -5,6 +5,7 @@ import com.musinsa.category.jwt.JwtAuthenticationEntryPoint;
 import com.musinsa.category.jwt.JwtSecurityConfig;
 import com.musinsa.category.jwt.TokenProvider;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -13,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
@@ -30,6 +32,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * security 전역 설정
+     * HttpSecurity 보다 우선
+     * static 파일 (css, js 같은) 인증이 필요없는 리소스 설정
+     * @param web
+     * @throws Exception
+     */
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
@@ -42,12 +51,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 );
     }
 
+    /**
+     * 리소스 보안 부분
+     * @param http
+     * @throws Exception
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
+                .csrf().disable()   // EnableWebSecurity 는 기본적으로 csrf(Cross-Site Request Forgery) 활성화, JWT 이기 때문에 비활성화
 
-                .exceptionHandling()
+                .exceptionHandling()    // 예외처리
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .accessDeniedHandler(jwtAccessDeniedHandler)
 
@@ -58,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .and()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT이기 때문에 server 응답과 client 세선 상태와 독립적
 
                 .and()
                 .authorizeRequests()

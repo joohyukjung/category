@@ -34,6 +34,10 @@ public class TokenProvider implements InitializingBean {
         this.tokenValidityInMilliseconds = tokenValidityInSeconds * 1000;
     }
 
+    /**
+     * 빈 생성 완료 -> DI(생성자방식) -> 변수 할당
+     * @throws Exception
+     */
     @Override
     public void afterPropertiesSet() throws Exception {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);

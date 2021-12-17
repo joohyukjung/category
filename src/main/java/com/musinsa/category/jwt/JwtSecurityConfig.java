@@ -12,9 +12,15 @@ public class JwtSecurityConfig extends SecurityConfigurerAdapter<DefaultSecurity
         this.tokenProvider = tokenProvider;
     }
 
+    /**
+     * Spring Security 로직에 JwtFilter 적용
+     * @param builder
+     * @throws Exception
+     */
     @Override
     public void configure(HttpSecurity builder) throws Exception {
         JwtFilter customFilter = new JwtFilter(tokenProvider);
+        // UsernamePasswordAuthenticationFilter 보다 먼저 실행
         builder.addFilterBefore(customFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
