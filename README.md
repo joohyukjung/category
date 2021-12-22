@@ -1,14 +1,4 @@
-# Category for Musinsa project
-#### 개발시 반드시 포함되어야 하는 항목
-1. RDBMS (과제 작성시 H2 DB 사용 권장)
-2. REST API
-
-#### 개발시 반드시 구현되어야 하는 내용
-1. 카테고리 등록 API
-   1. 카테고리를 등록/수정/삭제 할 수 있어야 합니다.
-2. 카테고리 조회 API
-   1. 상위 카테고리를 이용해, 해당 카테고리의 하위의 모든 카테고리를 리턴 가능해야 합니다. 
-   2. 상위 카테고리를 지정하지 않을 시, 전체 카테고리를 리턴해야 합니다.
+# Category
 
 ## Installation and Getting Started
 ### 1. git install
