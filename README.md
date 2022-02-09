@@ -1,4 +1,4 @@
-# Category.
+# Category....
 
 ## Installation and Getting Started
 ### 1. git install
